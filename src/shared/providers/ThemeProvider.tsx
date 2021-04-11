@@ -1,47 +1,6 @@
-import {
-  createContext,
-  ReactNode,
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-} from 'react';
-import { Colors, dark, light } from './colors';
-
-export enum ThemeMode {
-  dark = 'dark',
-  light = 'light',
-}
-
-interface Sizes {
-  xs?: string;
-  sm: string;
-  md: string;
-  lg: string;
-  xl?: string;
-  xxl?: string;
-  xxxl?: string;
-}
-
-interface Radii extends Sizes {
-  full?: string;
-  none?: string;
-}
-
-export interface Theme {
-  color: Colors;
-  fontSize: Sizes;
-  lineHeight: Sizes;
-  padding: Sizes;
-  radius: Radii;
-}
-
-interface ThemeState {
-  mode: ThemeMode;
-  theme: Theme;
-  toggleMode: () => void;
-}
+import * as React from 'react';
+import { Theme, ThemeMode } from '../models/models';
+import { dark, light } from '../styles/colors';
 
 // Get system color mode as the default
 const defaultMode =
@@ -49,13 +8,8 @@ const defaultMode =
     ? ThemeMode.dark
     : ThemeMode.light;
 
-interface ThemeContextState {
-  mode: ThemeMode;
-  setMode: (mode: ThemeMode) => void;
-  theme: Theme;
-}
-
-const defaultTheme = {
+// Base theme
+const baseTheme = {
   color: defaultMode === ThemeMode.dark ? dark : light,
   fontSize: {
     xs: '11px',
@@ -88,28 +42,34 @@ const defaultTheme = {
   },
 };
 
-export const ThemeContext = createContext<ThemeContextState>({
+interface ThemeContextState {
+  mode: ThemeMode;
+  setMode: (mode: ThemeMode) => void;
+  theme: Theme;
+}
+
+export const ThemeContext = React.createContext<ThemeContextState>({
   mode: defaultMode,
   setMode: (mode: ThemeMode): void => {},
-  theme: defaultTheme,
+  theme: baseTheme,
 });
 
 interface ThemeProviderProps {
-  children: ReactNode;
+  children: React.ReactNode;
 }
 
-export const ThemeProvider = (props: ThemeProviderProps) => {
-  const [mode, setMode] = useState<ThemeMode>(defaultMode);
+export function ThemeProvider(props: ThemeProviderProps) {
+  const [mode, setMode] = React.useState<ThemeMode>(defaultMode);
 
-  const theme = useMemo((): Theme => {
+  const theme = React.useMemo((): Theme => {
     const out: Theme = {
-      ...defaultTheme,
+      ...baseTheme,
       color: mode === ThemeMode.dark ? dark : light,
     };
     return out;
   }, [mode]);
 
-  useEffect(() => {
+  React.useEffect(() => {
     const modeChangeHandler = (ev: MediaQueryListEvent) => {
       const newMode = ev.matches ? ThemeMode.dark : ThemeMode.light;
       setMode(newMode);
@@ -129,20 +89,4 @@ export const ThemeProvider = (props: ThemeProviderProps) => {
   return (
     <ThemeContext.Provider value={{ mode, setMode, theme }}>{props.children}</ThemeContext.Provider>
   );
-};
-
-export const useTheme = (): ThemeState => {
-  const { mode, setMode, theme } = useContext(ThemeContext);
-
-  const toggleMode = useCallback((): void => {
-    if (mode === ThemeMode.light) {
-      window.localStorage.setItem('mode', ThemeMode.dark);
-      setMode(ThemeMode.dark);
-    } else {
-      window.localStorage.setItem('mode', ThemeMode.light);
-      setMode(ThemeMode.light);
-    }
-  }, [mode, setMode]);
-
-  return { mode, theme, toggleMode };
-};
+}
