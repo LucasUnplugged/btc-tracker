@@ -2,7 +2,7 @@ import * as React from 'react';
 import { css } from '@emotion/react';
 import { useTheme } from '../../shared/hooks/useTheme';
 import { PriceState, ThemeMode } from '../../shared/models/models';
-import { useCountUp } from 'react-countup';
+import CountUp from 'react-countup';
 
 interface TrackerHeaderProps {
   price: PriceState;
@@ -14,34 +14,28 @@ export default function TrackerHeader(props: TrackerHeaderProps) {
   } = props;
   const {
     mode,
-    theme: { color, radius },
+    theme: { color, padding, radius },
   } = useTheme();
   const isDark = mode === ThemeMode.dark;
 
-  // ANIMATED PRICE ///////////////////////////////////////////////////////////////////////////////
   // Price formatter, which could be fully localized
-  const formatPrice = React.useCallback(
+  const formatPriceCompact = React.useCallback(
     (price: number): string =>
-      price.toLocaleString('en-US', { style: 'currency', currency: 'USD' }),
+      price.toLocaleString('en-US', {
+        style: 'currency',
+        currency: 'USD',
+        notation: 'compact',
+      }),
     []
   );
-  // Use a hook to animate changes
-  const { countUp: price, start, update } = useCountUp({
-    duration: 0.5,
-    end: current,
-    formattingFn: formatPrice,
-    start: previous,
-    useEasing: false,
-  });
-  // Initiate the effect on mount
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  React.useEffect(start, []);
-  // Update the animation whenever the price changes
-  React.useEffect((): void => {
-    update(current);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [current]);
-  // END OF ANIMATED PRICE ////////////////////////////////////////////////////////////////////////
+  const formatPrice = React.useCallback(
+    (price: number): string =>
+      price.toLocaleString('en-US', {
+        style: 'currency',
+        currency: 'USD',
+      }),
+    []
+  );
 
   const arrow = React.useMemo((): React.ReactNode => {
     const isPlus = delta > 0;
@@ -61,11 +55,11 @@ export default function TrackerHeader(props: TrackerHeaderProps) {
             : `border-color: ${isDark ? color.white : color.black};`}
           border-radius: ${radius.lg};
           display: flex;
-          height: 100px;
+          height: 90px;
           justify-content: center;
           position: relative;
           transition: 0.2s ease-in;
-          width: 100px;
+          width: 90px;
 
           span {
             ${isPlus
@@ -73,34 +67,23 @@ export default function TrackerHeader(props: TrackerHeaderProps) {
               : isMinus
               ? `background: ${color.error};`
               : `background: ${isDark ? color.white : color.black};`}
+            bottom: 39%;
+            display: block;
             height: 3px;
+            left: 25%;
+            position: absolute;
             transition: 0.2s ease-in;
-            width: 30px;
-
-            &:first-of-type {
-              display: block;
-              position: absolute;
-              left: 25%;
-              bottom: 39%;
-            }
+            width: 27px;
 
             &:nth-of-type(2) {
-              display: block;
-              position: absolute;
               left: 45%;
-              bottom: 39%;
             }
 
             &:nth-of-type(3) {
-              display: block;
-              position: absolute;
-              left: 25%;
               bottom: 58%;
             }
 
             &:nth-of-type(4) {
-              display: block;
-              position: absolute;
               left: 45%;
               bottom: 58%;
             }
@@ -108,73 +91,71 @@ export default function TrackerHeader(props: TrackerHeaderProps) {
         `}
       >
         <span
-          css={
-            isPlus
-              ? css`
-                  transform: rotate(-45deg);
-                `
-              : isMinus
-              ? css`
-                  transform: rotate(45deg);
-                `
-              : css`
-                  transform: rotate(0deg);
-                `
-          }
+          css={css`
+            transform: ${isPlus ? 'rotate(-45deg)' : isMinus ? 'rotate(45deg)' : 'rotate(0deg)'};
+          `}
         />
         <span
-          css={
-            isPlus
-              ? css`
-                  transform: rotate(45deg);
-                `
-              : isMinus
-              ? css`
-                  transform: rotate(-45deg);
-                `
-              : css`
-                  transform: rotate(0deg);
-                `
-          }
+          css={css`
+            transform: ${isPlus ? 'rotate(45deg)' : isMinus ? 'rotate(-45deg)' : 'rotate(0deg)'};
+          `}
         />
         <span
-          css={
-            isPlus
-              ? css`
-                  transform: rotate(135deg);
-                `
-              : isMinus
-              ? css`
-                  transform: rotate(225deg);
-                `
-              : css`
-                  transform: rotate(180deg);
-                `
-          }
+          css={css`
+            transform: ${isPlus ? 'rotate(135deg)' : isMinus ? 'rotate(225deg)' : 'rotate(180deg)'};
+          `}
         />
         <span
-          css={
-            isPlus
-              ? css`
-                  transform: rotate(-135deg);
-                `
+          css={css`
+            transform: ${isPlus
+              ? 'rotate(-135deg)'
               : isMinus
-              ? css`
-                  transform: rotate(-225deg);
-                `
-              : css`
-                  transform: rotate(-180deg);
-                `
-          }
+              ? 'rotate(-225deg)'
+              : 'rotate(-180deg)'};
+          `}
         />
       </div>
     );
   }, [color, delta, isDark, radius]);
 
   return (
-    <header>
-      <h2>{price}</h2>
-      <h3>USD</h3>
+    <header
+      css={css`
+        display: flex;
+        justify-content: flex-end;
+      `}
+    >
+      <section
+        css={css`
+          margin-right: ${padding.lg};
+        `}
+      >
+        <h2
+          css={css`
+            font-size: 50px;
+            font-weight: 600;
+            margin-bottom: ${padding.sm};
+          `}
+        >
+          <CountUp
+            duration={0.25}
+            end={current}
+            formattingFn={formatPriceCompact}
+            start={previous}
+          />
+        </h2>
+        <h3
+          css={css`
+            display: flex;
+            font-size: 23px;
+            font-weight: 300;
+            justify-content: flex-end;
+            margin: 0;
+          `}
+        >
+          <CountUp duration={0.25} end={current} formattingFn={formatPrice} start={previous} />
+        </h3>
+      </section>
       {arrow}
     </header>
   );

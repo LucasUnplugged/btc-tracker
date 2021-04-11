@@ -7,7 +7,7 @@ import Button from '../Button/Button';
 export default function Header() {
   const {
     mode,
-    theme: { padding },
+    theme: { color, fontSize, padding },
     toggleMode,
   } = useTheme();
   const isDark = mode === ThemeMode.dark;
@@ -19,17 +19,21 @@ export default function Header() {
     <header
       css={css`
         align-items: center;
+        background: ${isDark ? color.neutral700 : color.neutral200};
         display: flex;
         justify-content: space-between;
-        margin-bottom: ${padding.xxl};
+        padding: ${padding.xl} ${padding.xxl};
       `}
     >
       <h1
         css={css`
+          color: ${isDark ? color.neutral100 : color.neutral700};
+          line-height: ${fontSize.xxxl};
+          font-weight: 200;
           margin: 0;
         `}
       >
-        BitCoiner 💰
+        BitCoiner
       </h1>
       <Button onClick={toggleMode} title={title}>
         <Icon className="icon" /> {target}

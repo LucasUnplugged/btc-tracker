@@ -18,7 +18,6 @@ export default function GlobalStyles() {
               Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial,
               sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
-            font-size: ${fontSize.md};
           }
 
           *::selection {
@@ -31,12 +30,14 @@ export default function GlobalStyles() {
           p,
           li,
           a {
+            font-size: ${fontSize.md};
             line-height: ${lineHeight.lg};
           }
 
           html,
           body {
             margin: 0;
+            padding: 0;
           }
 
           html {
@@ -49,7 +50,6 @@ export default function GlobalStyles() {
             color: ${isDark ? color.white : color.neutral700};
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu',
               'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
-            padding: ${padding.xxl};
           }
 
           code {

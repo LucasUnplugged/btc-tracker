@@ -1,9 +1,10 @@
+import { css } from '@emotion/react';
 import * as React from 'react';
+import { useTheme } from '../../shared/hooks/useTheme';
 import { PriceState } from '../../shared/models/models';
 import TrackerHeader from '../TrackerHeader/TrackerHeader';
 
 const HEARTBEAT_DELAY = 3750; // 16 per minute
-// const HEARTBEAT_DELAY = 1750;
 let interval: ReturnType<typeof setInterval>;
 
 interface TrackerProps {
@@ -13,6 +14,10 @@ interface TrackerProps {
 
 export default function Tracker(props: TrackerProps) {
   const { getPrice, price } = props;
+  const {
+    mode,
+    theme: { padding },
+  } = useTheme();
   const [heartbeat, setHeartbeat] = React.useState<number>(new Date().getTime());
 
   // Live update heartbeat
@@ -29,7 +34,11 @@ export default function Tracker(props: TrackerProps) {
   React.useEffect(getPrice, [getPrice, heartbeat]);
 
   return (
-    <article>
+    <article
+      css={css`
+        padding: ${padding.xxl};
+      `}
+    >
       <TrackerHeader price={price} />
     </article>
   );

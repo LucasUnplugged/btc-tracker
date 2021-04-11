@@ -35,7 +35,7 @@ export default function App() {
   }, [getPrice]);
 
   return (
-    <main className="App">
+    <main>
       <GlobalStyles />
       <Header />
       {price && <Tracker getPrice={getPrice} price={price} />}
