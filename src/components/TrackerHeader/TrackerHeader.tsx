@@ -58,8 +58,14 @@ export default function TrackerHeader(props: TrackerHeaderProps) {
           height: 90px;
           justify-content: center;
           position: relative;
-          transition: 0.2s ease-in;
           width: 90px;
+
+          @media (prefers-reduced-motion: no-preference) {
+            &,
+            span {
+              transition: 0.2s ease-in;
+            }
+          }
 
           span {
             ${isPlus
@@ -72,7 +78,6 @@ export default function TrackerHeader(props: TrackerHeaderProps) {
             height: 3px;
             left: 25%;
             position: absolute;
-            transition: 0.2s ease-in;
             width: 27px;
 
             &:nth-of-type(2) {
@@ -137,7 +142,24 @@ export default function TrackerHeader(props: TrackerHeaderProps) {
             margin-bottom: ${padding.sm};
           `}
         >
+          {/* Provide "reduced motion" alternatives, for improved accessibility */}
+          <span
+            css={css`
+              display: inline-block;
+              @media (prefers-reduced-motion: no-preference) {
+                display: none;
+              }
+            `}
+          >
+            {formatPriceCompact(current)}
+          </span>
           <CountUp
+            css={css`
+              display: none;
+              @media (prefers-reduced-motion: no-preference) {
+                display: inline-block;
+              }
+            `}
             duration={0.25}
             end={current}
             formattingFn={formatPriceCompact}
@@ -153,7 +175,29 @@ export default function TrackerHeader(props: TrackerHeaderProps) {
             margin: 0;
           `}
         >
-          <CountUp duration={0.25} end={current} formattingFn={formatPrice} start={previous} />
+          {/* Provide "reduced motion" alternatives, for improved accessibility */}
+          <span
+            css={css`
+              display: inline-block;
+              @media (prefers-reduced-motion: no-preference) {
+                display: none;
+              }
+            `}
+          >
+            {formatPrice(current)}
+          </span>
+          <CountUp
+            css={css`
+              display: none;
+              @media (prefers-reduced-motion: no-preference) {
+                display: inline-block;
+              }
+            `}
+            duration={0.25}
+            end={current}
+            formattingFn={formatPrice}
+            start={previous}
+          />
         </h3>
       </section>
       {arrow}
