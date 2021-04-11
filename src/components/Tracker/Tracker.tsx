@@ -15,7 +15,6 @@ interface TrackerProps {
 export default function Tracker(props: TrackerProps) {
   const { getPrice, price } = props;
   const {
-    mode,
     theme: { padding },
   } = useTheme();
   const [heartbeat, setHeartbeat] = React.useState<number>(new Date().getTime());
