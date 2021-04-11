@@ -1,11 +1,11 @@
-import { useCallback, useContext } from 'react';
+import * as React from 'react';
 import { ThemeContext } from '../providers/ThemeProvider';
 import { ThemeMode, ThemeState } from '../models/models';
 
 export const useTheme = (): ThemeState => {
-  const { mode, setMode, theme } = useContext(ThemeContext);
+  const { mode, setMode, theme } = React.useContext(ThemeContext);
 
-  const toggleMode = useCallback((): void => {
+  const toggleMode = React.useCallback((): void => {
     if (mode === ThemeMode.light) {
       window.localStorage.setItem('mode', ThemeMode.dark);
       setMode(ThemeMode.dark);
