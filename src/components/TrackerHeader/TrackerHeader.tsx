@@ -2,6 +2,7 @@ import * as React from 'react';
 import { css } from '@emotion/react';
 import { useTheme } from '../../shared/hooks/useTheme';
 import { PriceState, ThemeMode } from '../../shared/models/models';
+import { useCountUp } from 'react-countup';
 
 interface TrackerHeaderProps {
   price: PriceState;
@@ -9,7 +10,7 @@ interface TrackerHeaderProps {
 
 export default function TrackerHeader(props: TrackerHeaderProps) {
   const {
-    price: { current, delta },
+    price: { current, delta, previous },
   } = props;
   const {
     mode,
@@ -17,11 +18,35 @@ export default function TrackerHeader(props: TrackerHeaderProps) {
   } = useTheme();
   const isDark = mode === ThemeMode.dark;
 
+  // ANIMATED PRICE ///////////////////////////////////////////////////////////////////////////////
+  // Price formatter, which could be fully localized
+  const formatPrice = React.useCallback(
+    (price: number): string =>
+      price.toLocaleString('en-US', { style: 'currency', currency: 'USD' }),
+    []
+  );
+  // Use a hook to animate changes
+  const { countUp: price, start, update } = useCountUp({
+    duration: 0.5,
+    end: current,
+    formattingFn: formatPrice,
+    start: previous,
+    useEasing: false,
+  });
+  // Initiate the effect on mount
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  React.useEffect(start, []);
+  // Update the animation whenever the price changes
+  React.useEffect((): void => {
+    update(current);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [current]);
+  // END OF ANIMATED PRICE ////////////////////////////////////////////////////////////////////////
+
   const arrow = React.useMemo((): React.ReactNode => {
     const isPlus = delta > 0;
     const isMinus = delta < 0;
     const deltaClass = delta > 0 ? 'plus' : delta < 0 ? 'minus' : 'equal';
-
     return (
       <div
         className={deltaClass}
@@ -144,15 +169,11 @@ export default function TrackerHeader(props: TrackerHeaderProps) {
         />
       </div>
     );
-  }, [delta, isDark]);
+  }, [color, delta, isDark, radius]);
 
   return (
     <header>
-      {/*
-      - Price
-      - Delta arrow
-      */}
-      <h2>{current.toLocaleString('en-US', { style: 'currency', currency: 'USD' })}</h2>
+      <h2>{price}</h2>
       <h3>USD</h3>
       {arrow}
     </header>

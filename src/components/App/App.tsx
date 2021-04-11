@@ -29,9 +29,10 @@ export default function App() {
       });
   }, []);
 
+  // Initial price fetch
   React.useEffect((): void => {
     getPrice();
-  }, []);
+  }, [getPrice]);
 
   return (
     <main className="App">

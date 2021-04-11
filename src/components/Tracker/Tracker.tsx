@@ -26,7 +26,7 @@ export default function Tracker(props: TrackerProps) {
     return (): void => clearInterval(interval);
   }, []);
 
-  React.useEffect(getPrice, [heartbeat]);
+  React.useEffect(getPrice, [getPrice, heartbeat]);
 
   return (
     <article>
