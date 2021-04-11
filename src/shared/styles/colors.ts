@@ -2,6 +2,7 @@ import { Colors } from '../models/models';
 
 export const dark: Colors = {
   black: '#030405',
+  error: '#fd5730',
   neutral50: '#e5e5e6',
   neutral100: '#c1c1c2',
   neutral200: '#9a9a9b',
@@ -22,11 +23,13 @@ export const dark: Colors = {
   primary700: '#521f60',
   primary800: '#2f113b',
   primary900: '#110318',
+  success: '#10aa30',
   white: '#f3f3f3',
 };
 
 export const light: Colors = {
   black: '#030405',
+  error: '#be1c0f',
   neutral50: '#f7f7f8',
   neutral100: '#dbdbdd',
   neutral200: '#bdbec0',
@@ -47,5 +50,6 @@ export const light: Colors = {
   primary700: '#521f60',
   primary800: '#2f113b',
   primary900: '#110318',
+  success: '#0f711a',
   white: '#f3f3f3',
 };

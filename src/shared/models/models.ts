@@ -1,17 +1,25 @@
 // DATA MODELS ////////////////////////////////////////////////////////////////////////////////////
-export interface stockDTO {
+export interface StockDTO {
   amount: string;
   base: string;
   currency: string;
 }
 
-export interface coinbaseDTO {
-  data: stockDTO;
+export interface CoinbaseDTO {
+  data: StockDTO;
+}
+
+// OTHER MODELS ///////////////////////////////////////////////////////////////////////////////////
+export interface PriceState {
+  current: number;
+  delta: number;
+  previous: number;
 }
 
 // THEME MODELS ///////////////////////////////////////////////////////////////////////////////////
 export interface Colors {
   black: string;
+  error: string;
   neutral50: string;
   neutral100: string;
   neutral200: string;
@@ -32,6 +40,7 @@ export interface Colors {
   primary700: string;
   primary800: string;
   primary900: string;
+  success: string;
   white: string;
 }
 

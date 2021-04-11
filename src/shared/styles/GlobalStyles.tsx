@@ -67,14 +67,14 @@ export default function GlobalStyles() {
             margin: ${padding.xl} 0;
           }
 
-          h1:first-child,
-          h2:first-child,
-          h3:first-child,
-          h4:first-child,
-          h5:first-child,
-          h6:first-child,
-          a:first-child,
-          p:first-child {
+          h1:first-of-type,
+          h2:first-of-type,
+          h3:first-of-type,
+          h4:first-of-type,
+          h5:first-of-type,
+          h6:first-of-type,
+          a:first-of-type,
+          p:first-of-type {
             margin-top: 0;
           }
 

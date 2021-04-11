@@ -27,6 +27,7 @@
     "babel-plugin-jsx-pragmatic": "^1.0.2",
     "babel-plugin-transform-inline-environment-variables": "^0.4.3",
     "customize-cra": "^1.0.0",
+    "eslint-config-prettier": "^8.1.0",
     "react-app-rewired": "^2.1.8",
     "typescript": "^4.1.2"
   },
