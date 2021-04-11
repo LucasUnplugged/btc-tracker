@@ -11,6 +11,11 @@ const defaultMode =
 // Base theme
 const baseTheme = {
   color: defaultMode === ThemeMode.dark ? dark : light,
+  font: {
+    body: `-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu',
+    'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'`,
+    code: `'Fira Code', source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace`,
+  },
   fontSize: {
     xs: '11px',
     sm: '12px',

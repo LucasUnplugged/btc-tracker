@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { css } from '@emotion/react';
 import { useTheme } from '../../shared/hooks/useTheme';
-import { ThemeMode } from '../../shared/models/models';
 
 type ClickEvent = React.MouseEvent<HTMLButtonElement, MouseEvent>;
 
@@ -10,16 +9,16 @@ interface ButtonProps {
   onClick: (event: ClickEvent) => void;
   'aria-label'?: string;
   title?: string;
+  width?: string;
 }
 
 export default function Button(props: ButtonProps) {
-  const { children, onClick, title } = props;
+  const { children, onClick, title, width } = props;
   const ariaLabel = props['aria-label'] ? props['aria-label'] : title;
   const {
-    mode,
+    isDark,
     theme: { color, fontSize, padding, radius },
   } = useTheme();
-  const isDark = mode === ThemeMode.dark;
 
   const clickHandler: React.MouseEventHandler<HTMLButtonElement> = React.useCallback(
     (event: ClickEvent): void => {
@@ -50,6 +49,7 @@ export default function Button(props: ButtonProps) {
         height: 40px;
         padding: ${padding.sm} ${padding.xl};
         font-size: ${fontSize.lg};
+        ${width ? `width: ${width};` : ''}
 
         &:focus,
         &:hover {

@@ -1,16 +1,14 @@
 import { css } from '@emotion/react';
 import { RiMoonLine, RiSunLine } from 'react-icons/ri';
 import { useTheme } from '../../shared/hooks/useTheme';
-import { ThemeMode } from '../../shared/models/models';
 import Button from '../Button/Button';
 
 export default function Header() {
   const {
-    mode,
+    isDark,
     theme: { color, fontSize, padding },
     toggleMode,
   } = useTheme();
-  const isDark = mode === ThemeMode.dark;
   const Icon = isDark ? RiSunLine : RiMoonLine;
   const target = isDark ? 'light' : 'dark';
   const title = `Switch to ${target} mode`;
@@ -33,9 +31,16 @@ export default function Header() {
           margin: 0;
         `}
       >
-        BitCoiner
+        Stock
+        <strong
+          css={css`
+            font-weight: 400;
+          `}
+        >
+          Tracker
+        </strong>
       </h1>
-      <Button onClick={toggleMode} title={title}>
+      <Button onClick={toggleMode} title={title} width="108px">
         <Icon className="icon" /> {target}
       </Button>
     </header>

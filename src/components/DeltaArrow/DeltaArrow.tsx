@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { css } from '@emotion/react';
 import { useTheme } from '../../shared/hooks/useTheme';
-import { ThemeMode } from '../../shared/models/models';
 
 interface DeltaArrowProps {
   delta: number;
@@ -10,10 +9,9 @@ interface DeltaArrowProps {
 export default function DeltaArrow(props: DeltaArrowProps) {
   const { delta } = props;
   const {
-    mode,
-    theme: { color, padding, radius },
+    isDark,
+    theme: { color },
   } = useTheme();
-  const isDark = mode === ThemeMode.dark;
 
   const arrow = React.useMemo((): React.ReactNode => {
     const isPlus = delta > 0;
@@ -32,18 +30,10 @@ export default function DeltaArrow(props: DeltaArrowProps) {
         title={title}
         css={css`
           align-items: center;
-          background: none;
-          border: 2px solid transparent;
-          ${isPlus
-            ? `border-color: ${plusColor};`
-            : isMinus
-            ? `border-color: ${minusColor};`
-            : `border-color: ${equalColor};`}
-          border-radius: ${radius.lg};
           display: flex;
           height: 90px;
           justify-content: center;
-          margin-left: ${padding.lg};
+          margin-right: 9px;
           position: relative;
           width: 90px;
 
@@ -60,6 +50,7 @@ export default function DeltaArrow(props: DeltaArrowProps) {
               : isMinus
               ? `background: ${minusColor};`
               : `background: ${equalColor};`}
+            border-radius: 3px;
             bottom: 39%;
             display: block;
             height: 3px;
@@ -108,7 +99,7 @@ export default function DeltaArrow(props: DeltaArrowProps) {
         />
       </div>
     );
-  }, [color, delta, isDark, padding, radius]);
+  }, [color, delta, isDark]);
 
   return <>{arrow}</>;
 }

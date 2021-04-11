@@ -14,7 +14,8 @@ export default function TrackerHeader(props: TrackerHeaderProps) {
     price: { current, delta, previous },
   } = props;
   const {
-    theme: { padding },
+    isDark,
+    theme: { color, padding },
   } = useTheme();
 
   // Price formatter, which could be fully localized
@@ -75,7 +76,13 @@ export default function TrackerHeader(props: TrackerHeaderProps) {
           display: flex;
         `}
       >
-        <div>
+        <div
+          css={css`
+            border-right: 2px solid ${isDark ? color.neutral400 : color.neutral200};
+            margin-right: 8px;
+            padding-right: 30px;
+          `}
+        >
           <h2 css={titleStyles}>
             {/* Provide "reduced motion" alternatives, for improved accessibility */}
             <span

@@ -1,23 +1,18 @@
 import * as React from 'react';
 import { Global, css } from '@emotion/react';
 import { useTheme } from '../../shared/hooks/useTheme';
-import { ThemeMode } from '../../shared/models/models';
 
 export default function GlobalStyles() {
-  const { mode, theme } = useTheme();
+  const { isDark, theme } = useTheme();
 
   const globalStyles = React.useMemo((): React.ReactNode => {
-    const { color, fontSize, lineHeight, padding } = theme;
-    const isDark = mode === ThemeMode.dark;
+    const { color, font, fontSize, lineHeight, padding } = theme;
     return (
       <Global
         styles={css`
           * {
             box-sizing: border-box;
-            font-family: 'Libre Franklin', -apple-system, BlinkMacSystemFont, Segoe UI, Roboto,
-              Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial,
-              sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+            font-family: ${font.body};
           }
 
           *::selection {
@@ -48,12 +43,10 @@ export default function GlobalStyles() {
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
             color: ${isDark ? color.white : color.neutral700};
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu',
-              'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
           }
 
           code {
-            font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+            font-family: ${font.code};
           }
 
           h1,
@@ -109,7 +102,7 @@ export default function GlobalStyles() {
         `}
       />
     );
-  }, [mode, theme]);
+  }, [isDark, theme]);
 
   return <>{globalStyles}</>;
 }

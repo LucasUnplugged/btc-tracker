@@ -8,6 +8,7 @@ export default function App() {
   const [price, setPrice] = React.useState<PriceState>();
 
   const getPrice = React.useCallback((): void => {
+    // fetch('https://api.coinbase.com/v2/prices/BTC-USD/buy', {
     fetch('response.json', {
       headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
     })
@@ -15,9 +16,10 @@ export default function App() {
       .then((source: CoinbaseDTO): void => {
         setPrice(
           (state?: PriceState): PriceState => {
-            // const current =  parseFloat(source.data.amount);
+            // const current = parseFloat(source.data.amount);
             const rand = Math.random();
-            const current = rand < 0.334 ? 50000 : rand > 0.666 ? 59000 : 55000;
+            const current = 50000 + rand * 9999;
+            // // const current = rand < 0.334 ? 50000 : rand > 0.666 ? 59000 : 55000;
             const previous = state?.current ?? current;
             return {
               current,

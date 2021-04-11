@@ -1,3 +1,5 @@
+import { VictoryThemeDefinition, ThemeBaseProps } from 'victory';
+
 // DATA MODELS ////////////////////////////////////////////////////////////////////////////////////
 export interface StockDTO {
   amount: string;
@@ -64,8 +66,14 @@ export interface Radii extends Sizes {
   none?: string;
 }
 
+interface Fonts {
+  body: string;
+  code: string;
+}
+
 export interface Theme {
   color: Colors;
+  font: Fonts;
   fontSize: Sizes;
   lineHeight: Sizes;
   padding: Sizes;
@@ -73,7 +81,28 @@ export interface Theme {
 }
 
 export interface ThemeState {
+  isDark: boolean;
   mode: ThemeMode;
   theme: Theme;
   toggleMode: () => void;
 }
+
+// GRAPH MODELS ///////////////////////////////////////////////////////////////////////////////////
+type StyleableThemeProp = {
+  style?: {
+    data?: React.CSSProperties;
+    labels?: React.CSSProperties;
+  };
+} & ThemeBaseProps;
+
+export interface GraphTheme extends VictoryThemeDefinition {
+  group?: StyleableThemeProp;
+  histogram?: StyleableThemeProp;
+}
+
+export interface StockGraphPoint {
+  timestamp: number;
+  price: number;
+}
+
+export type StockGraphData = StockGraphPoint[];

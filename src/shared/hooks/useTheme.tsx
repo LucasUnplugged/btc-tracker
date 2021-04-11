@@ -4,6 +4,7 @@ import { ThemeMode, ThemeState } from '../models/models';
 
 export const useTheme = (): ThemeState => {
   const { mode, setMode, theme } = React.useContext(ThemeContext);
+  const isDark = mode === ThemeMode.dark;
 
   const toggleMode = React.useCallback((): void => {
     if (mode === ThemeMode.light) {
@@ -15,5 +16,5 @@ export const useTheme = (): ThemeState => {
     }
   }, [mode, setMode]);
 
-  return { mode, theme, toggleMode };
+  return { isDark, mode, theme, toggleMode };
 };
