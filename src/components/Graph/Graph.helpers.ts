@@ -1,4 +1,7 @@
-import { GraphTheme, Theme } from '../../shared/models/models';
+import { GraphTheme, StockGraphPoint, Theme } from '../../shared/models/models';
+
+export const getPriceTooltip = ({ datum }: { datum: StockGraphPoint }): string =>
+  formatPrice(datum.price);
 
 export const formatTime = (time: number): string =>
   new Date(time)
@@ -143,16 +146,15 @@ export const getGraphTheme = (isDark: boolean, theme: Theme): GraphTheme => {
       },
     },
     tooltip: {
-      style: { ...baseLabelStyles, padding: 0, pointerEvents: 'none' },
+      style: { ...baseLabelStyles, fill: altNeutral, padding: 0, pointerEvents: 'none' },
       flyoutStyle: {
-        stroke: mainNeutral,
-        strokeWidth: 1,
+        stroke: 'transparent',
         fill: textNeutral,
         pointerEvents: 'none',
       },
-      flyoutPadding: 5,
-      cornerRadius: 5,
-      pointerLength: 10,
+      flyoutPadding: { top: 4, bottom: 4, left: 7, right: 7 },
+      cornerRadius: 2,
+      pointerLength: 6,
     },
   };
 };

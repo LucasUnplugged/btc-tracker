@@ -2,9 +2,16 @@ import * as React from 'react';
 import { css } from '@emotion/react';
 import { GraphTheme, PriceState, StockGraphPoint } from '../../shared/models/models';
 import { dataReducer, DataReducer } from './Graph.reducer';
-import { VictoryArea, VictoryChart, VictoryGroup } from 'victory';
+import {
+  VictoryArea,
+  VictoryChart,
+  VictoryClipContainer,
+  VictoryGroup,
+  VictoryScatter,
+  VictoryTooltip,
+} from 'victory';
 import { useTheme } from '../../shared/hooks/useTheme';
-import { formatPriceCompact, formatTime, getGraphTheme } from './Graph.helpers';
+import { formatPriceCompact, formatTime, getGraphTheme, getPriceTooltip } from './Graph.helpers';
 import { convertHexToRGBA } from '../../shared/styles/colors';
 import { VictoryAxis } from 'victory';
 import { useMediaQuery } from '../../shared/hooks/useMediaQuery';
@@ -29,25 +36,7 @@ export default function Graph(props: GraphProps) {
     theme: { color },
   } = useTheme();
 
-  const interpolation = 'step'; // 'catmullRom'
-  const graphTheme = React.useMemo((): GraphTheme => getGraphTheme(isDark, theme), [isDark, theme]);
-  const graphAverageColor = React.useMemo(
-    (): string => (isDark ? color.neutral400 : color.neutral400),
-    [color, isDark]
-  );
-  const graphPriceColor = React.useMemo(
-    (): string => (isDark ? color.primary500 : color.primary600),
-    [color, isDark]
-  );
-
-  React.useEffect((): void => {
-    const point: StockGraphPoint = {
-      price: price.current,
-      timestamp: new Date().getTime(),
-    };
-    dispatcher({ type: 'ADD_DATA_POINT', point });
-  }, [price]);
-
+  // Calculate size modifier for different viewport sizes
   const isViewXXXL = useMediaQuery('(min-width: 1500px)');
   const isViewXXL = useMediaQuery('(min-width: 1250px)');
   const isViewXL = useMediaQuery('(min-width: 1100px)');
@@ -74,14 +63,53 @@ export default function Graph(props: GraphProps) {
     ? 2.1
     : 2.3;
   const rightPadding = 35;
+  const graphTheme = React.useMemo((): GraphTheme => getGraphTheme(isDark, theme), [isDark, theme]);
+  const graphPriceColor = React.useMemo(
+    (): string => (isDark ? color.primary500 : color.primary600),
+    [color, isDark]
+  );
+  const tooltip = React.useMemo(
+    (): React.ReactElement => (
+      <VictoryTooltip
+        style={{
+          fill: isDark ? color.primary800 : color.neutral100,
+          fontSize: 9 * sizeMod,
+          pointerEvents: 'none',
+        }}
+        flyoutStyle={{
+          fill: convertHexToRGBA(isDark ? color.neutral100 : color.neutral800, 90),
+          pointerEvents: 'none',
+          stroke: 'transparent',
+        }}
+        flyoutPadding={{
+          top: 4 * sizeMod,
+          bottom: 4 * sizeMod,
+          left: 7 * sizeMod,
+          right: 7 * sizeMod,
+        }}
+        cornerRadius={2 * sizeMod}
+        pointerLength={6 * sizeMod}
+      />
+    ),
+    [color, isDark, sizeMod]
+  );
+
+  React.useEffect((): void => {
+    const point: StockGraphPoint = {
+      price: price.current,
+      timestamp: new Date().getTime(),
+    };
+    dispatcher({ type: 'ADD_DATA_POINT', point });
+  }, [price]);
 
   return (
     <figure
       css={css`
-        margin: 0 calc(${101 + 6 * sizeMod}px - ${(rightPadding * sizeMod) / 5}%) 0 0;
+        margin: 0 calc(${106 + 4 * sizeMod}px - ${(rightPadding * sizeMod) / 5}%) 0 0;
         padding: 0;
       `}
     >
+      {/* CHART GRADIENTS */}
       <svg
         css={css`
           height: 0;
@@ -92,8 +120,8 @@ export default function Graph(props: GraphProps) {
       >
         <defs>
           <linearGradient id="average-gradient" gradientTransform="rotate(90)">
-            <stop offset="0%" stopColor={convertHexToRGBA(graphAverageColor, 50)} />
-            <stop offset="100%" stopColor={convertHexToRGBA(graphAverageColor, 0)} />
+            <stop offset="0%" stopColor={convertHexToRGBA(color.neutral400, 50)} />
+            <stop offset="100%" stopColor={convertHexToRGBA(color.neutral400, 0)} />
           </linearGradient>
           <linearGradient id="price-gradient" gradientTransform="rotate(90)">
             <stop offset="0%" stopColor={convertHexToRGBA(graphPriceColor, 50)} />
@@ -101,6 +129,8 @@ export default function Graph(props: GraphProps) {
           </linearGradient>
         </defs>
       </svg>
+
+      {/* CHART */}
       <VictoryChart
         animate={{ duration: 500, onLoad: { duration: 350 } }}
         domain={{ x: [initialDate, currentDate], y: [40000, 65000] }}
@@ -114,6 +144,7 @@ export default function Graph(props: GraphProps) {
         scale={{ x: 'time' }}
         theme={graphTheme}
       >
+        {/* CHART AXIS */}
         <VictoryAxis
           fixLabelOverlap
           label="Time"
@@ -131,10 +162,17 @@ export default function Graph(props: GraphProps) {
           }}
           tickFormat={formatPriceCompact}
         />
+
+        {/* STACK OF CHART ELEMENTS */}
         <VictoryGroup
+          data={data.average}
+          labelComponent={tooltip}
+          labels={getPriceTooltip}
           style={{
-            data: { strokeWidth: 1 * sizeMod },
+            data: { strokeWidth: sizeMod },
           }}
+          x="timestamp"
+          y="price"
         >
           <VictoryArea
             style={{
@@ -144,18 +182,31 @@ export default function Graph(props: GraphProps) {
               },
             }}
             interpolation="catmullRom"
-            data={data.average}
-            x="timestamp"
-            y="price"
           />
+        </VictoryGroup>
+        <VictoryGroup
+          data={data.stock}
+          labelComponent={tooltip}
+          labels={getPriceTooltip}
+          style={{
+            data: { strokeWidth: sizeMod },
+          }}
+          x="timestamp"
+          y="price"
+        >
           <VictoryArea
             style={{
               data: { fill: 'url(#price-gradient)' },
             }}
-            interpolation={interpolation}
-            data={data.stock}
-            x="timestamp"
-            y="price"
+          />
+          <VictoryScatter
+            groupComponent={<VictoryClipContainer />}
+            size={3 * sizeMod}
+            style={{
+              data: {
+                fill: 'transparent',
+              },
+            }}
           />
         </VictoryGroup>
       </VictoryChart>

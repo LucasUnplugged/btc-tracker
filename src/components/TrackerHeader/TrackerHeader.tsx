@@ -39,9 +39,19 @@ export default function TrackerHeader(props: TrackerHeaderProps) {
       css={css`
         display: flex;
         justify-content: space-between;
+        @media (max-width: 680px) {
+          flex-direction: column;
+        }
       `}
     >
-      <section>
+      <section
+        css={css`
+          @media (max-width: 680px) {
+            text-align: right;
+            margin: 0 139px ${padding.xxl} 0;
+          }
+        `}
+      >
         <h2 css={titleStyles}>
           BTC
           <span
@@ -58,6 +68,9 @@ export default function TrackerHeader(props: TrackerHeaderProps) {
       <section
         css={css`
           display: flex;
+          @media (max-width: 680px) {
+            justify-content: flex-end;
+          }
         `}
       >
         <div
