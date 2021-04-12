@@ -24,6 +24,7 @@ interface GraphProps {
 
 export default function Graph(props: GraphProps) {
   const { currentDate, initialDate, price } = props;
+  const initialPrice = React.useRef<number>(price.current);
   const [data, dispatcher] = React.useReducer<DataReducer>(dataReducer, {
     averageCount: 0,
     averageTotal: 0,
@@ -133,7 +134,10 @@ export default function Graph(props: GraphProps) {
       {/* CHART */}
       <VictoryChart
         animate={{ duration: 0, onLoad: { duration: 500 } }}
-        domain={{ x: [initialDate, currentDate], y: [price.current / 1.25, price.current * 1.25] }}
+        domain={{
+          x: [initialDate, currentDate],
+          y: [initialPrice.current / 1.25, initialPrice.current * 1.25],
+        }}
         height={245 * sizeMod}
         padding={{
           top: 20 * sizeMod,
