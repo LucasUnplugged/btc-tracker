@@ -4,7 +4,7 @@ import GlobalStyles from '../../shared/styles/GlobalStyles';
 import Tracker from '../Tracker/Tracker';
 import { CoinbaseDTO, PriceState } from '../../shared/models/models';
 
-let isDemo = true;
+let isDemo = false;
 
 export default function App() {
   const [price, setPrice] = React.useState<PriceState>();
