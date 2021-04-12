@@ -4,22 +4,21 @@ import GlobalStyles from '../../shared/styles/GlobalStyles';
 import Tracker from '../Tracker/Tracker';
 import { CoinbaseDTO, PriceState } from '../../shared/models/models';
 
+let isDemo = true;
+
 export default function App() {
   const [price, setPrice] = React.useState<PriceState>();
 
   const getPrice = React.useCallback((): void => {
-    // fetch('https://api.coinbase.com/v2/prices/BTC-USD/buy', {
-    fetch('response.json', {
+    fetch(isDemo ? 'response.json' : 'https://api.coinbase.com/v2/prices/BTC-USD/buy', {
       headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
     })
       .then((response: Response): Promise<CoinbaseDTO> => response.json())
       .then((source: CoinbaseDTO): void => {
         setPrice(
           (state?: PriceState): PriceState => {
-            // const current = parseFloat(source.data.amount);
             const rand = Math.random();
-            const current = 50000 + rand * 9999;
-            // // const current = rand < 0.334 ? 50000 : rand > 0.666 ? 59000 : 55000;
+            const current = isDemo ? 58000 + rand * 4000 : parseFloat(source.data.amount);
             const previous = state?.current ?? current;
             return {
               current,
@@ -29,6 +28,19 @@ export default function App() {
           }
         );
       });
+  }, []);
+
+  React.useEffect((): (() => void) => {
+    const demoKeyHandler = (event: KeyboardEvent) => {
+      if (event.key === 'e' && event.shiftKey && (event.ctrlKey || event.metaKey)) {
+        console.log(isDemo ? 'Switching to live data' : 'Switching to mocked demo data');
+        isDemo = !isDemo;
+      }
+    };
+    window.addEventListener('keydown', demoKeyHandler);
+    return (): void => {
+      window.removeEventListener('keydown', demoKeyHandler);
+    };
   }, []);
 
   // Initial price fetch

@@ -132,8 +132,8 @@ export default function Graph(props: GraphProps) {
 
       {/* CHART */}
       <VictoryChart
-        animate={{ duration: 500, onLoad: { duration: 350 } }}
-        domain={{ x: [initialDate, currentDate], y: [40000, 65000] }}
+        animate={{ duration: 0, onLoad: { duration: 500 } }}
+        domain={{ x: [initialDate, currentDate], y: [price.current / 1.25, price.current * 1.25] }}
         height={245 * sizeMod}
         padding={{
           top: 20 * sizeMod,
