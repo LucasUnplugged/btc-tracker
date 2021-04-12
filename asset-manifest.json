@@ -1,0 +1,19 @@
+{
+  "files": {
+    "main.js": "/btc-tracker/static/js/main.b7426705.chunk.js",
+    "main.js.map": "/btc-tracker/static/js/main.b7426705.chunk.js.map",
+    "runtime-main.js": "/btc-tracker/static/js/runtime-main.6dce62a3.js",
+    "runtime-main.js.map": "/btc-tracker/static/js/runtime-main.6dce62a3.js.map",
+    "static/js/2.7170c247.chunk.js": "/btc-tracker/static/js/2.7170c247.chunk.js",
+    "static/js/2.7170c247.chunk.js.map": "/btc-tracker/static/js/2.7170c247.chunk.js.map",
+    "static/js/3.c6f0ebcc.chunk.js": "/btc-tracker/static/js/3.c6f0ebcc.chunk.js",
+    "static/js/3.c6f0ebcc.chunk.js.map": "/btc-tracker/static/js/3.c6f0ebcc.chunk.js.map",
+    "index.html": "/btc-tracker/index.html",
+    "static/js/2.7170c247.chunk.js.LICENSE.txt": "/btc-tracker/static/js/2.7170c247.chunk.js.LICENSE.txt"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.6dce62a3.js",
+    "static/js/2.7170c247.chunk.js",
+    "static/js/main.b7426705.chunk.js"
+  ]
+}
