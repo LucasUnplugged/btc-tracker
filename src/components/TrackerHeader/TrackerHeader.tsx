@@ -4,6 +4,9 @@ import { useTheme } from '../../shared/hooks/useTheme';
 import { PriceState } from '../../shared/models/models';
 import CountUp from 'react-countup';
 import DeltaArrow from '../DeltaArrow/DeltaArrow';
+import { formatPriceCompact, formatPrice } from '../Graph/Graph.helpers';
+
+const COUNTER_DURATION = 0.5;
 
 interface TrackerHeaderProps {
   price: PriceState;
@@ -17,25 +20,6 @@ export default function TrackerHeader(props: TrackerHeaderProps) {
     isDark,
     theme: { color, padding },
   } = useTheme();
-
-  // Price formatter, which could be fully localized
-  const formatPriceCompact = React.useCallback(
-    (price: number): string =>
-      price.toLocaleString('en-US', {
-        style: 'currency',
-        currency: 'USD',
-        notation: 'compact',
-      }),
-    []
-  );
-  const formatPrice = React.useCallback(
-    (price: number): string =>
-      price.toLocaleString('en-US', {
-        style: 'currency',
-        currency: 'USD',
-      }),
-    []
-  );
 
   // COMPOSABLE STYLES ////////////////////////////////////////////////////////////////////////////
   const titleStyles = css`
@@ -102,7 +86,7 @@ export default function TrackerHeader(props: TrackerHeaderProps) {
                   display: inline-block;
                 }
               `}
-              duration={0.25}
+              duration={COUNTER_DURATION}
               end={current}
               formattingFn={formatPriceCompact}
               start={previous}
@@ -133,7 +117,7 @@ export default function TrackerHeader(props: TrackerHeaderProps) {
                   display: inline-block;
                 }
               `}
-              duration={0.25}
+              duration={COUNTER_DURATION}
               end={current}
               formattingFn={formatPrice}
               start={previous}

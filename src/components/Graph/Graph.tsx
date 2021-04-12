@@ -4,9 +4,10 @@ import { GraphTheme, PriceState, StockGraphPoint } from '../../shared/models/mod
 import { dataReducer, DataReducer } from './Graph.reducer';
 import { VictoryArea, VictoryChart, VictoryGroup } from 'victory';
 import { useTheme } from '../../shared/hooks/useTheme';
-import { getGraphTheme } from './Graph.helpers';
+import { formatPriceCompact, formatTime, getGraphTheme } from './Graph.helpers';
 import { convertHexToRGBA } from '../../shared/styles/colors';
 import { VictoryAxis } from 'victory';
+import { useMediaQuery } from '../../shared/hooks/useMediaQuery';
 
 interface GraphProps {
   currentDate: number;
@@ -47,10 +48,37 @@ export default function Graph(props: GraphProps) {
     dispatcher({ type: 'ADD_DATA_POINT', point });
   }, [price]);
 
+  const isViewXXXL = useMediaQuery('(min-width: 1500px)');
+  const isViewXXL = useMediaQuery('(min-width: 1250px)');
+  const isViewXL = useMediaQuery('(min-width: 1100px)');
+  const isViewLG = useMediaQuery('(min-width: 1000px)');
+  const isViewMD = useMediaQuery('(min-width: 900px)');
+  const isViewSM = useMediaQuery('(min-width: 800px)');
+  const isViewXS = useMediaQuery('(min-width: 700px)');
+  const isViewXXS = useMediaQuery('(min-width: 600px)');
+  const sizeMod = isViewXXXL
+    ? 0.75
+    : isViewXXL
+    ? 0.9
+    : isViewXL
+    ? 1.1
+    : isViewLG
+    ? 1.3
+    : isViewMD
+    ? 1.5
+    : isViewSM
+    ? 1.7
+    : isViewXS
+    ? 1.9
+    : isViewXXS
+    ? 2.1
+    : 2.3;
+  const rightPadding = 35;
+
   return (
     <figure
       css={css`
-        margin: 0;
+        margin: 0 calc(${101 + 6 * sizeMod}px - ${(rightPadding * sizeMod) / 5}%) 0 0;
         padding: 0;
       `}
     >
@@ -76,13 +104,38 @@ export default function Graph(props: GraphProps) {
       <VictoryChart
         animate={{ duration: 500, onLoad: { duration: 350 } }}
         domain={{ x: [initialDate, currentDate], y: [40000, 65000] }}
-        padding={{ top: 20, bottom: 40, left: 5, right: 52 }}
+        height={245 * sizeMod}
+        padding={{
+          top: 20 * sizeMod,
+          bottom: 30 * sizeMod,
+          left: 15 * sizeMod,
+          right: rightPadding * sizeMod,
+        }}
         scale={{ x: 'time' }}
         theme={graphTheme}
       >
-        <VictoryAxis label="Time (ms)" />
-        <VictoryAxis dependentAxis orientation="right" />
-        <VictoryGroup>
+        <VictoryAxis
+          fixLabelOverlap
+          label="Time"
+          style={{
+            axisLabel: { fontSize: 7 * sizeMod, fontWeight: 500, padding: 20 * sizeMod },
+            tickLabels: { fontSize: 7 * sizeMod, padding: 5 * sizeMod },
+          }}
+          tickFormat={formatTime}
+        />
+        <VictoryAxis
+          dependentAxis
+          orientation="right"
+          style={{
+            tickLabels: { fontSize: 7 * sizeMod, padding: 5 * sizeMod },
+          }}
+          tickFormat={formatPriceCompact}
+        />
+        <VictoryGroup
+          style={{
+            data: { strokeWidth: 1 * sizeMod },
+          }}
+        >
           <VictoryArea
             style={{
               data: {

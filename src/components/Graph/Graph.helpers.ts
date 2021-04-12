@@ -1,5 +1,23 @@
 import { GraphTheme, Theme } from '../../shared/models/models';
 
+export const formatTime = (time: number): string =>
+  new Date(time)
+    .toLocaleTimeString('en-US', { timeStyle: 'medium' })
+    .replace(/\s([AaPp][Mm])/g, '');
+
+// Price formatter, which could be fully localized
+export const formatPriceCompact = (price: number): string =>
+  price.toLocaleString('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    notation: 'compact',
+  });
+export const formatPrice = (price: number): string =>
+  price.toLocaleString('en-US', {
+    style: 'currency',
+    currency: 'USD',
+  });
+
 // GRAPH STYLES /////////////////////////////////////////////////////////////////////////////////
 export const getGraphTheme = (isDark: boolean, theme: Theme): GraphTheme => {
   const { color, font } = theme;
@@ -13,7 +31,7 @@ export const getGraphTheme = (isDark: boolean, theme: Theme): GraphTheme => {
   // Layout
   const baseProps = {
     width: 500,
-    height: 300,
+    height: 250,
     padding: 40,
     colorScale: colors,
   };
@@ -88,9 +106,6 @@ export const getGraphTheme = (isDark: boolean, theme: Theme): GraphTheme => {
     group: {
       ...baseProps,
       colorScale: colors,
-      style: {
-        data: { strokeWidth: 1.5 },
-      },
     },
     histogram: {
       ...baseProps,

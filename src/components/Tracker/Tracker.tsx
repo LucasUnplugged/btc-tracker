@@ -18,7 +18,7 @@ export default function Tracker(props: TrackerProps) {
   const {
     theme: { padding },
   } = useTheme();
-  const initialDate = React.useRef<number>(new Date().getTime() - 1000);
+  const initialDate = React.useRef<number>(new Date().getTime() - 60000);
   const [heartbeat, setHeartbeat] = React.useState<number>(new Date().getTime());
 
   // Live update heartbeat
