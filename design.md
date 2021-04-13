@@ -1,3 +1,20 @@
+# Architecture
+
+```
+<ThemeProvider via useTheme> --> { isDark: boolean; theme: Theme; toggleMode: fn; }
+  <App as main> --> { price: PriceState; getPrice: () => CoinbaseDTO; }
+    <GlobalStyles>
+    <Header as header>
+      <Button as button, with toggleMode> <-- { onClick: fn; }
+    <Tracker as article> <-- { getPrice: fn; price: PriceState;}
+      <TrackerHeader as header> <-- { price: PriceState; }
+        <DeltaArrow> <-- { delta: number; }
+      <Graph as figure> <-- { currentDate: number; initialDate: number; price: PriceState; }
+        <VictoryChart> <-- { data: StockGraphData }
+```
+
+---
+
 # Zest.ai Assigment
 
 Design and implement a frontend to make use of this endpoint to track the price of BTC in USD from the time the browser is opened, until the time it is closed.
